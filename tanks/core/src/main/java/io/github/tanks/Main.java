@@ -81,7 +81,6 @@ public class Main extends ApplicationAdapter {
         //logica
         p.update();
         p.sendData(out);
-        System.out.println(in);
         o.receiveData(in);
         
         //rendering

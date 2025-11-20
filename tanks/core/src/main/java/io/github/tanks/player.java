@@ -96,6 +96,7 @@ public class player {
     	System.out.println("dati mandati");
         if(hasShot){
             out.println(hitbox.x+" "+hitbox.y+" "+bulletDestX+" "+bulletDestY);
+            hasShot = false; //its not what you think
         } else {
             out.println(hitbox.x+" "+hitbox.y);
         }

@@ -3,6 +3,7 @@ package io.github.tanks;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -40,23 +41,23 @@ public class Opponent {
     	} while(s == null);
     	System.out.println("coordinate ricevute: "+s);
     	String[] coord = s.split("\\s+");
+
     	System.out.println();
     	enemyPosX = Float.parseFloat(coord[0]);
 		enemyPosY = Float.parseFloat(coord[1]);
     	setPos(enemyPosX, enemyPosY);
-		
-		System.out.println(coord.length + " array");
+		//System.out.println(coord[2] + "bleb");
 		if(coord.length > 2){
+			//coord is not what you think
 			enemyBulletX = Float.parseFloat(coord[2]);
 			enemyBulletY = Float.parseFloat(coord[3]);
-
-			enemyBullets.add(
-				new bullet(enemyPosX + hitbox.width / 2, enemyPosY + hitbox.height / 2, enemyBulletX, enemyBulletY));
+			bullet b = new bullet(enemyPosX + hitbox.width / 2, enemyPosY + hitbox.height / 2, enemyBulletX, enemyBulletY);
+			enemyBullets.add(b);
 		}
-
 		for(bullet b : enemyBullets){
 			b.updatePos();
 		}
+		System.out.println(enemyBullets.size() + "size of this bleb");
     }
 
 
