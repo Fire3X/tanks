@@ -1,5 +1,6 @@
 package io.github.tanks;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -15,9 +16,9 @@ public class player {
     private float speed;
     private ArrayList<bullet> bullets;
 
-    public player(){
+    public player(int posx, int posy){
 
-        hitbox = new Rectangle(0, 0, 100, 100);
+        hitbox = new Rectangle(posx, posy, 100, 100);
         movementVector = new Vector2();
         speed = 10;
         bullets = new ArrayList<bullet>();
@@ -70,10 +71,15 @@ public class player {
 
 
     }
+    
+    void sendData(PrintWriter out) {
+    	System.out.println("dati mandati");
+    	out.println(hitbox.x+" "+hitbox.y);
+    }
 
     public void draw(ShapeRenderer s){
 
-        s.setColor(Color.RED);
+        s.setColor(Color.BLUE);
         s.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
 
         for(bullet b : bullets){
