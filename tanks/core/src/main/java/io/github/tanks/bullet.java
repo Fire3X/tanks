@@ -1,6 +1,5 @@
 package io.github.tanks;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -13,14 +12,18 @@ public class bullet {
     float speed;
     Circle hitbox;
     float radius;
+    
 
-    public bullet(float x, float y, float directionX, float directionY){
+    ShapeRenderer shapeRenderer;
 
+    public bullet(float x, float y, float directionX, float directionY, ShapeRenderer s){
+
+        shapeRenderer = s;
         speed = 10;
         radius = 20;
         startingPos = new Vector2(x, y);
         hitbox = new Circle(startingPos, radius);
-        direction = new Vector2(directionX - x, Gdx.graphics.getHeight() - directionY - y).nor();
+        direction = new Vector2(directionX, directionY).nor();
     }
 
     
@@ -31,10 +34,10 @@ public class bullet {
         hitbox.y+=direction.y * speed;
     }
 
-    public void draw(ShapeRenderer s){
+    public void draw(){
 
-        s.setColor(Color.BLUE);
-        s.circle(hitbox.x, hitbox.y, hitbox.radius);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.circle(hitbox.x, hitbox.y, hitbox.radius);
     }
 }
 

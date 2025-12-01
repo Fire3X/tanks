@@ -1,6 +1,5 @@
 package io.github.tanks;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -16,16 +15,22 @@ public class player {
     private float speed;
     private ArrayList<bullet> bullets;
 
+    ShapeRenderer shapeRenderer;
+
     private float bulletStartX;
     private float bulletStartY;
 
     private float bulletDestX;
     private float bulletDestY;
 
+    private float clickX;
+    private float clickY;
+
     private boolean hasShot;
 
-    public player(int posx, int posy){
+    public player(int posx, int posy, ShapeRenderer s){
 
+        shapeRenderer = s;
         hitbox = new Rectangle(posx, posy, 100, 100);
         movementVector = new Vector2();
         speed = 10;
@@ -36,9 +41,25 @@ public class player {
         bulletDestY = 0;
     }
 
-    public void create(){
+    public Rectangle getHitbox() {
+    	return this.hitbox;
+    }
+    
+    public float getBulletDestX() {
+    	return this.bulletDestX;
+    }
+    
+    public float getBulletDestY() {
+    	return this.bulletDestY;
+    }
+    
+    public boolean hasShot() {
+    	return this.hasShot;
+    }
 
-    } 
+    public void resetShot(){
+        this.hasShot = false;
+    }
 
     public void shoot(){
 
@@ -47,9 +68,13 @@ public class player {
             bulletStartX = hitbox.x + hitbox.width / 2;
             bulletStartY = hitbox.y + hitbox.height / 2;
 
-            bulletDestX = Gdx.input.getX();
-            bulletDestY = Gdx.input.getY();
-            bullets.add(new bullet(bulletStartX, bulletStartY, bulletDestX, bulletDestY));
+            clickX = Gdx.input.getX();
+            clickY = Gdx.input.getY();
+
+            bulletDestX = clickX - bulletStartX;
+            bulletDestY = Gdx.graphics.getHeight() - clickY - bulletStartY;
+            
+            bullets.add(new bullet(bulletStartX, bulletStartY, bulletDestX, bulletDestY, shapeRenderer));
         }
 
 
@@ -88,30 +113,16 @@ public class player {
         hitbox.x+=movementVector.nor().x * speed;
         hitbox.y+=movementVector.nor().y * speed;
         movementVector.setZero();
-
-
-    }
-    
-    void sendData(PrintWriter out) {
-    	System.out.println("dati mandati");
-        if(hasShot){
-            out.println(hitbox.x+" "+hitbox.y+" "+bulletDestX+" "+bulletDestY);
-            hasShot = false; //its not what you think
-        } else {
-            out.println(hitbox.x+" "+hitbox.y);
-        }
     }
 
+    public void draw(){
 
-
-    public void draw(ShapeRenderer s){
-
-        s.setColor(Color.BLUE);
-        s.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
 
         for(bullet b : bullets){
 
-            b.draw(s);
+            b.draw();
         }
     }
 }
