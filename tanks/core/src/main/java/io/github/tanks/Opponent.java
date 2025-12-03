@@ -40,8 +40,6 @@ public class Opponent {
 	public void update(float x, float y){
 
 		setPos(x, y);
-
-		updateBullets();
 	}
 
 	public void update(float x, float y, float bulletDestX, float bulletDestY){
@@ -50,8 +48,6 @@ public class Opponent {
 
 		bullet b = new bullet(hitbox.x + hitbox.width / 2, hitbox.y + hitbox.height / 2, bulletDestX, bulletDestY, shapeRenderer);
 		enemyBullets.add(b);
-
-		updateBullets();
 	}
 
 	public void updateBullets(){

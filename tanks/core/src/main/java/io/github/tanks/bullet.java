@@ -1,5 +1,6 @@
 package io.github.tanks;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -30,8 +31,8 @@ public class bullet {
 
     void updatePos(){
 
-        hitbox.x+=direction.x * speed;
-        hitbox.y+=direction.y * speed;
+        hitbox.x+=direction.x * speed * Gdx.graphics.getDeltaTime();
+        hitbox.y+=direction.y * speed * Gdx.graphics.getDeltaTime();
     }
 
     public void draw(){

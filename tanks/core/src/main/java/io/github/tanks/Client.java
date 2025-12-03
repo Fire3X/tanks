@@ -44,7 +44,8 @@ public class Client {
         clientID = i;
     }
 
-    public void update(){
+    public void update(){   //l'unico metodo che fa update bullets
+                            //prima veniva fatto anche dagli update di opponent == velocità anomale
         thisPlayer.update();
 
         for(Opponent o : opponents){
@@ -65,6 +66,7 @@ public class Client {
     public void addOpponent(String m){ // n (numero del client nuovo)
 
         opponents.add(new Opponent(m, shapeRenderer));
+        out.println(thisPlayer.getHitbox().x+" "+thisPlayer.getHitbox().y);
     }
 
     public BufferedReader getInputStream() {
@@ -80,55 +82,57 @@ public class Client {
         if(thisPlayer.hasShot()){
             out.println(thisPlayer.getHitbox().x+" "+thisPlayer.getHitbox().y+" "
                 +thisPlayer.getBulletDestX()+" "+thisPlayer.getBulletDestY());
-
             thisPlayer.resetShot();
-
-        } else {
-            out.println(thisPlayer.getHitbox().x+" "+thisPlayer.getHitbox().y);
         }
+        //no else, così può mandarli tutti e due
+        if (thisPlayer.hasMoved()) {
+            out.println(thisPlayer.getHitbox().x+" "+thisPlayer.getHitbox().y);
+            thisPlayer.resetMovement();
+        }
+
+        
+        
     }
     
     public void receiveData() throws IOException {
 
     	String s = null;
 
-        if (!in.ready()) return; //ready controlla se il buffer è pronto, altrimenti sarebbe bloccante
-        s = in.readLine();
-        if (s == null) return;
+        
+        while (in.ready()) {//ready controlla se il buffer è pronto, altrimenti sarebbe bloccante
+                            //con un while potrà leggere più messaggi ogni frame
+            s = in.readLine();
+            System.out.println("recived: " + s);
+            String[] message = s.split("\\s+");
 
-    	String[] message = s.split("\\s+");
+            String flag = message[0];           //il flag può essere f, n, oppure un'id
 
-        String flag = message[0];           //il flag può essere f, n, oppure un'id
+            if(flag.equals("f")){ firstConnection(message); } 
+            else if(flag.equals("n")){ addOpponent(message[1]); }
+            else {
 
-        if(flag.equals("f")){ firstConnection(message); } 
-        else if(flag.equals("n")){ addOpponent(message[1]); }
-        else {
-
-            int opponentToUpdate = Integer.parseInt(message[0]);
-
-            float enemyPosX = Float.parseFloat(message[1]);
-            float enemyPosY = Float.parseFloat(message[2]);
-
-            if(message.length > 3){
-                //coord is not what you think
-                float enemyBulletX = Float.parseFloat(message[3]);
-                float enemyBulletY = Float.parseFloat(message[4]);
-                
+                int opponentToUpdate = Integer.parseInt(message[0]);
+                    
                 for(Opponent o : opponents){
                     if (o.getId() == opponentToUpdate){
-                        o.update(enemyPosX, enemyPosY, enemyBulletX, enemyBulletY);
-                    }
-                }
-            
-            } else {
 
-                for(Opponent o : opponents){
-                    if (o.getId() == opponentToUpdate){
-                        o.update(enemyPosX, enemyPosY);
+                        float enemyPosX = Float.parseFloat(message[1]);
+                        float enemyPosY = Float.parseFloat(message[2]);
+
+                        if(message.length > 3){
+                            //coord is not what you think
+                            float enemyBulletX = Float.parseFloat(message[3]);
+                            float enemyBulletY = Float.parseFloat(message[4]);
+                            o.update(enemyPosX, enemyPosY, enemyBulletX, enemyBulletY);
+
+                        } else {
+
+                            o.update(enemyPosX, enemyPosY);
+                        }
                     }
                 }
             }
-        }
+        }           
     }
 
     public void drawOpponents(){

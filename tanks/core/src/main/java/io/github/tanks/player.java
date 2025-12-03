@@ -27,15 +27,17 @@ public class player {
     private float clickY;
 
     private boolean hasShot;
+    private boolean hasMoved;
 
     public player(int posx, int posy, ShapeRenderer s){
 
         shapeRenderer = s;
         hitbox = new Rectangle(posx, posy, 100, 100);
         movementVector = new Vector2();
-        speed = 10;
+        speed = 500;
         bullets = new ArrayList<bullet>();
         hasShot = false;
+        hasMoved = false;
 
         bulletDestX = 0;
         bulletDestY = 0;
@@ -60,6 +62,15 @@ public class player {
     public void resetShot(){
         this.hasShot = false;
     }
+
+    public boolean hasMoved() {
+    	return this.hasMoved;
+    }
+
+    public void resetMovement(){
+        this.hasMoved = false;
+    }
+
 
     public void shoot(){
 
@@ -93,25 +104,29 @@ public class player {
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
             movementVector.add(0, 1);
+            hasMoved = true;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
             movementVector.add(-1, 0);
+            hasMoved = true;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
             movementVector.add(0, -1);
+            hasMoved = true;
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
             movementVector.add(1, 0);
+            hasMoved = true;
         }
     }
 
     void updatePos(){
 
-        hitbox.x+=movementVector.nor().x * speed;
-        hitbox.y+=movementVector.nor().y * speed;
+        hitbox.x+=movementVector.nor().x * speed * Gdx.graphics.getDeltaTime();
+        hitbox.y+=movementVector.nor().y * speed * Gdx.graphics.getDeltaTime();
         movementVector.setZero();
     }
 
